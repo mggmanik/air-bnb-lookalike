@@ -15,17 +15,10 @@
 <ion-content>
     <ion-grid>
         <ion-row>
-            <ion-col>
+            <ion-col size-md="6" offset-md="3">
                 <ion-list>
                     <ion-item-sliding *ngFor="let offer of offers" #itemSliding>
-                        <ion-item [routerLink]="['/','places','tabs','offers',offer.id]">
-                            <ion-thumbnail slot="start">
-                                <ion-img [src]="offer?.imageUrl"></ion-img>
-                            </ion-thumbnail>
-                            <ion-label>
-                                <h2>{{offer?.title}}</h2>
-                            </ion-label>
-                        </ion-item>
+                        <app-offer-item [offer]="offer"></app-offer-item>
                         <ion-item-options side="end">
                             <ion-item-option color="secondary" (click)="onEditOffer(offer.id, itemSliding)">
                                 <ion-icon slot="icon-only" name="create"></ion-icon>
