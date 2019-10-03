@@ -17,7 +17,9 @@ export class OffersPage implements OnInit {
     }
 
     ngOnInit() {
-        this.offers = this.placesService.places;
+        this.placesService.places.subscribe(offers => {
+            this.offers = offers;
+        });
     }
 
     onEditOffer(offerId: string, itemSliding: IonItemSliding) {

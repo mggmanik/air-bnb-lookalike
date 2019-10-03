@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
-import {NavController} from "@ionic/angular";
+import {ActivatedRoute, Router} from "@angular/router";
+import {LoadingController, NavController} from "@ionic/angular";
 import {PlacesService} from "../../places.service";
 import {Place} from "../../place.model";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
@@ -17,7 +17,9 @@ export class EditOfferPage implements OnInit {
 
     constructor(private route: ActivatedRoute,
                 private navCtrl: NavController,
-                private placesService: PlacesService) {
+                private placesService: PlacesService,
+                private loadingCtrl: LoadingController,
+                private router: Router) {
     }
 
     ngOnInit() {
@@ -27,7 +29,9 @@ export class EditOfferPage implements OnInit {
                 return;
             }
             const placeId = paramMap.get('placeId');
-            this.offer = this.placesService.getPlace(placeId);
+            this.placesService.getPlace(placeId).subscribe(offer => {
+                this.offer = offer;
+            });
             this.form = new FormGroup({
                 title: new FormControl(this.offer.title, {
                     updateOn: 'blur',
@@ -45,7 +49,20 @@ export class EditOfferPage implements OnInit {
         if (!this.form.valid) {
             return;
         }
-        console.log(this.form);
+        this.loadingCtrl.create({
+            message: 'Updating Place...'
+        }).then(loadingEl => {
+            loadingEl.present();
+            this.placesService.updatePlace(
+                this.offer.id,
+                this.form.value.title,
+                this.form.value.description
+            ).subscribe(() => {
+                loadingEl.dismiss();
+                this.form.reset();
+                this.router.navigateByUrl("/places/tabs/offers");
+            });
+        });
     }
 
 }

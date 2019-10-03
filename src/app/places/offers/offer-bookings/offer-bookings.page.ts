@@ -26,7 +26,9 @@ export class OfferBookingsPage implements OnInit {
                 return;
             }
             const placeId = paramMap.get('placeId');
-            this.offer = this.placesService.getPlace(placeId);
+            this.placesService.getPlace(placeId).subscribe(offer => {
+                this.offer = offer;
+            });
         })
     }
 

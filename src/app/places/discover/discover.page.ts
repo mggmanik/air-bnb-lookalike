@@ -15,7 +15,9 @@ export class DiscoverPage implements OnInit {
     }
 
     ngOnInit() {
-        this.places = this.placesService.places;
+        this.placesService.places.subscribe(places => {
+            this.places = places;
+        });
     }
 
     onFilterUpdate(event: CustomEvent) {
