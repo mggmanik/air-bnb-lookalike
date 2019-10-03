@@ -48,7 +48,15 @@ export class CreateBookingComponent implements OnInit {
         if (!form.valid || !this.datesValidation(form)) {
             return;
         }
-        this.modalCtrl.dismiss({bookingData: form.value}, 'confirm');
+        this.modalCtrl.dismiss({
+            bookingData: {
+                firstName: form.value['first-name'],
+                lastName: form.value['last-name'],
+                guestNumber: +form.value['guest-number'],
+                startDate: new Date(form.value['date-from']),
+                endDate: new Date(form.value['date-to'])
+            }
+        }, 'confirm');
     }
 
     datesValidation(form: NgForm) {

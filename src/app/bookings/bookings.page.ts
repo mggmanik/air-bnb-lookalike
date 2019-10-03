@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {BookingService} from "./booking.service";
 import {Booking} from "./booking.model";
-import {IonItemSliding} from "@ionic/angular";
+import {IonItemSliding, LoadingController} from "@ionic/angular";
 
 @Component({
     selector: 'app-bookings',
@@ -12,15 +12,24 @@ export class BookingsPage implements OnInit {
 
     bookings: Booking[];
 
-    constructor(private bookingService: BookingService) {
+    constructor(private bookingService: BookingService, private loadingCtrl: LoadingController) {
     }
 
     ngOnInit() {
-        this.bookings = this.bookingService.bookings;
+        this.bookingService.bookings.subscribe(bookings =>
+            this.bookings = bookings);
     }
 
     onDeleteBooking(bookingId: string, itemSliding: IonItemSliding) {
-        itemSliding.close();
+        this.loadingCtrl.create({
+            message: 'Cacnelling...'
+        }).then(loadingEl => {
+            loadingEl.present();
+            this.bookingService.cancelBooking(bookingId).subscribe(() => {
+                itemSliding.close();
+                loadingEl.dismiss();
+            });
+        });
     }
 
 }
