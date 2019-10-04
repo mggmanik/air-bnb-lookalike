@@ -20,9 +20,13 @@ export class BookingsPage implements OnInit {
             this.bookings = bookings);
     }
 
+    ionViewWillEnter() {
+        this.bookingService.fetchBookings().subscribe();
+    }
+
     onDeleteBooking(bookingId: string, itemSliding: IonItemSliding) {
         this.loadingCtrl.create({
-            message: 'Cacnelling...'
+            message: 'Cancelling...'
         }).then(loadingEl => {
             loadingEl.present();
             this.bookingService.cancelBooking(bookingId).subscribe(() => {

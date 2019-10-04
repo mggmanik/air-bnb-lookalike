@@ -1,5 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import {ActionSheetController, LoadingController, ModalController, NavController} from "@ionic/angular";
+import {
+    ActionSheetController,
+    AlertController,
+    LoadingController,
+    ModalController,
+    NavController
+} from "@ionic/angular";
 import {ActivatedRoute, Router} from "@angular/router";
 import {PlacesService} from "../../places.service";
 import {Place} from "../../place.model";
@@ -25,6 +31,7 @@ export class PlaceDetailPage implements OnInit {
                 private bookingService: BookingService,
                 private authService: AuthService,
                 private loadingCtrl: LoadingController,
+                private alertCtrl: AlertController,
                 private router: Router) {
     }
 
@@ -36,9 +43,26 @@ export class PlaceDetailPage implements OnInit {
             }
             const placeId = paramMap.get('placeId');
             this.placesService.getPlace(placeId).subscribe(place => {
-                this.place = place;
-                this.isBookable = place.userId !== this.authService.userId;
-            });
+                    this.place = place;
+                    this.isBookable = place.userId !== this.authService.userId;
+                },
+                error => {
+                    this.alertCtrl.create({
+                        header: 'An Error Occurred!',
+                        message: 'The place does not exist! Please try again later.',
+                        buttons: [
+                            {
+                                text: 'Okay',
+                                handler: () => {
+                                    this.router.navigateByUrl('/places/tabs/discover');
+                                }
+                            }
+                        ]
+                    })
+                        .then(alertEl => {
+                            alertEl.present();
+                        })
+                });
         })
     }
 

@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {PlacesService} from "../places.service";
 import {Place} from "../place.model";
-import {IonItemSliding} from "@ionic/angular";
+import {IonItemSliding, LoadingController} from "@ionic/angular";
 import {Router} from "@angular/router";
 
 @Component({
@@ -13,13 +13,25 @@ export class OffersPage implements OnInit {
 
     offers: Place[];
 
-    constructor(private placesService: PlacesService, private router: Router) {
+    constructor(private placesService: PlacesService,
+                private router: Router,
+                private loadingCtrl: LoadingController) {
     }
 
     ngOnInit() {
         this.placesService.places.subscribe(offers => {
             this.offers = offers;
         });
+    }
+
+    ionViewWillEnter() {
+        this.loadingCtrl.create({message: 'Fetching...'})
+            .then(loadingEl => {
+                loadingEl.present();
+                this.placesService.fetchPlaces().subscribe(() => {
+                    loadingEl.dismiss();
+                });
+            })
     }
 
     onEditOffer(offerId: string, itemSliding: IonItemSliding) {
