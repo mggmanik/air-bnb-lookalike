@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Place} from "./place.model";
 import {AuthService} from "../auth/auth.service";
 import {BehaviorSubject, of} from "rxjs";
-import {delay, map, switchMap, take, tap} from "rxjs/operators";
+import {map, switchMap, take, tap} from "rxjs/operators";
 import {HttpClient} from "@angular/common/http";
 
 interface PlaceData {

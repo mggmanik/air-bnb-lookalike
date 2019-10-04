@@ -2,8 +2,7 @@ import {Injectable} from '@angular/core';
 import {Booking} from "./booking.model";
 import {BehaviorSubject} from "rxjs";
 import {AuthService} from "../auth/auth.service";
-import {delay, map, switchMap, take, tap} from "rxjs/operators";
-import {Place} from "../places/place.model";
+import {map, switchMap, take, tap} from "rxjs/operators";
 import {HttpClient} from "@angular/common/http";
 
 interface BookingData {
