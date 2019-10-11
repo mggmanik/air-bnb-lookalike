@@ -1,0 +1,7 @@
+{
+  "appId": "io.ionic.starter",
+  "appName": "AirBnb2.0",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "www"
+}

@@ -12,7 +12,7 @@ import {Place} from "../../place.model";
 import {CreateBookingComponent} from "../../../bookings/create-booking/create-booking.component";
 import {BookingService} from "../../../bookings/booking.service";
 import {AuthService} from "../../../auth/auth.service";
-import {switchMap} from "rxjs/operators";
+import {switchMap, take} from "rxjs/operators";
 
 @Component({
     selector: 'app-place-detail',
@@ -44,7 +44,9 @@ export class PlaceDetailPage implements OnInit {
             }
             const placeId = paramMap.get('placeId');
             let fetchedUserId: string;
-            this.authService.userId.pipe(switchMap(userId => {
+            this.authService.userId.pipe(
+                take(1),
+                switchMap(userId => {
                     if (!userId) {
                         throw new Error('Found no user!');
                     }
@@ -103,7 +105,6 @@ export class PlaceDetailPage implements OnInit {
     }
 
     openBookingModel(mode: 'select' | 'random') {
-        console.log(mode);
         this.modalCtrl.create({
             component: CreateBookingComponent,
             componentProps: {
