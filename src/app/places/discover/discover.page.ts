@@ -3,6 +3,7 @@ import {PlacesService} from "../places.service";
 import {Place} from "../place.model";
 import {AuthService} from "../../auth/auth.service";
 import {LoadingController} from "@ionic/angular";
+import {take} from "rxjs/operators";
 
 @Component({
     selector: 'app-discover',
@@ -37,11 +38,13 @@ export class DiscoverPage implements OnInit {
     }
 
     onFilterUpdate(event: CustomEvent) {
-        if (event.detail.value === 'all') {
-            this.relevantPlaces = this.places;
-        } else {
-            this.relevantPlaces = this.places.filter(place => place.userId !== this.authService.userId);
-        }
+        this.authService.userId.pipe(take(1)).subscribe(userId => {
+            if (event.detail.value === 'all') {
+                this.relevantPlaces = this.places;
+            } else {
+                this.relevantPlaces = this.places.filter(place => place.userId !== userId);
+            }
+        });
     }
 
 }

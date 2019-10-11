@@ -108,21 +108,27 @@ export class PlacesService {
 
     addPlace(title: string, description: string, price: number, dateFrom: Date, dateTo: Date) {
         let generatedId: string;
-        const newPlace = new Place(
-            Math.random().toString(),
-            title,
-            description,
-            'http://www.hotelkasauliresort.com/images/Homepage_Resort_INDEX/top-slider-img2.jpg',
-            price,
-            dateFrom,
-            dateTo,
-            this.authService.userId
-        );
-        return this.http.post<{ name: string }>('https://ionic-angular-course-18a8b.firebaseio.com/offered-places.json', {
-            ...newPlace,
-            id: null
-        }).pipe(
-            switchMap(resData => {
+        let newPlace: Place;
+        return this.authService.userId.pipe(take(1), switchMap(userId => {
+                if (!userId) {
+                    throw new Error("User not found!");
+                }
+                newPlace = new Place(
+                    Math.random().toString(),
+                    title,
+                    description,
+                    'http://www.hotelkasauliresort.com/images/Homepage_Resort_INDEX/top-slider-img2.jpg',
+                    price,
+                    dateFrom,
+                    dateTo,
+                    userId
+                );
+                return this.http.post<{ name: string }>('https://ionic-angular-course-18a8b.firebaseio.com/offered-places.json',
+                    {
+                        ...newPlace,
+                        id: null
+                    });
+            }), switchMap(resData => {
                 generatedId = resData.name;
                 return this.places;
             }),

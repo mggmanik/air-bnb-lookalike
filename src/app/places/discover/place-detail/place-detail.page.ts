@@ -12,6 +12,7 @@ import {Place} from "../../place.model";
 import {CreateBookingComponent} from "../../../bookings/create-booking/create-booking.component";
 import {BookingService} from "../../../bookings/booking.service";
 import {AuthService} from "../../../auth/auth.service";
+import {switchMap} from "rxjs/operators";
 
 @Component({
     selector: 'app-place-detail',
@@ -42,9 +43,17 @@ export class PlaceDetailPage implements OnInit {
                 return;
             }
             const placeId = paramMap.get('placeId');
-            this.placesService.getPlace(placeId).subscribe(place => {
+            let fetchedUserId: string;
+            this.authService.userId.pipe(switchMap(userId => {
+                    if (!userId) {
+                        throw new Error('Found no user!');
+                    }
+                    fetchedUserId = userId;
+                    return this.placesService.getPlace(placeId);
+                })
+            ).subscribe(place => {
                     this.place = place;
-                    this.isBookable = place.userId !== this.authService.userId;
+                    this.isBookable = place.userId !== fetchedUserId;
                 },
                 error => {
                     this.alertCtrl.create({
