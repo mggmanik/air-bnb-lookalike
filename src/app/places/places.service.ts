@@ -106,7 +106,14 @@ export class PlacesService {
             );
     }
 
-    addPlace(title: string, description: string, price: number, dateFrom: Date, dateTo: Date) {
+    uploadImage(image: File) {
+        const uploadData = new FormData();
+        uploadData.append('image', image);
+
+        return this.http.post<{ imageUrl: string, imagePath: string }>('https://us-central1-ionic-angular-course-18a8b.cloudfunctions.net/storeImage', uploadData);
+    }
+
+    addPlace(title: string, description: string, price: number, imageUrl: string, dateFrom: Date, dateTo: Date) {
         let generatedId: string;
         let newPlace: Place;
         return this.authService.userId.pipe(take(1), switchMap(userId => {
@@ -117,7 +124,7 @@ export class PlacesService {
                     Math.random().toString(),
                     title,
                     description,
-                    'https://q-xx.bstatic.com/xdata/images/hotel/840x460/164923902.jpg?k=24abf59db0e1b69efcb02af010169eba32f2cb8549d472eca9518d114ff364b1&o=',
+                    imageUrl,
                     price,
                     dateFrom,
                     dateTo,

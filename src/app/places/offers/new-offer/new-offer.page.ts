@@ -3,6 +3,7 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {PlacesService} from "../../places.service";
 import {Router} from "@angular/router";
 import {LoadingController} from "@ionic/angular";
+import {switchMap} from "rxjs/operators";
 
 // function base64toBlob(base64Data, contentType) {
 //     contentType = contentType || '';
@@ -115,13 +116,19 @@ export class NewOfferPage implements OnInit {
             message: 'Creating Offer...'
         }).then(loadingEl => {
             loadingEl.present();
-            this.placesService.addPlace(
-                formValue.title,
-                formValue.description,
-                +formValue.price,
-                new Date(formValue.dateFrom),
-                new Date(formValue.dateTo)
-            ).subscribe(() => {
+            this.placesService.uploadImage(this.form.get('image').value)
+                .pipe(
+                    switchMap(uploadRes => {
+                        return this.placesService.addPlace(
+                            formValue.title,
+                            formValue.description,
+                            +formValue.price,
+                            uploadRes.imageUrl,
+                            new Date(formValue.dateFrom),
+                            new Date(formValue.dateTo)
+                        );
+                    })
+                ).subscribe(() => {
                 loadingEl.dismiss();
                 this.form.reset();
                 this.router.navigateByUrl("/places/tabs/offers");
