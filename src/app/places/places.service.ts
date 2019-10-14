@@ -117,7 +117,7 @@ export class PlacesService {
                     Math.random().toString(),
                     title,
                     description,
-                    'http://www.hotelkasauliresort.com/images/Homepage_Resort_INDEX/top-slider-img2.jpg',
+                    'https://q-xx.bstatic.com/xdata/images/hotel/840x460/164923902.jpg?k=24abf59db0e1b69efcb02af010169eba32f2cb8549d472eca9518d114ff364b1&o=',
                     price,
                     dateFrom,
                     dateTo,
