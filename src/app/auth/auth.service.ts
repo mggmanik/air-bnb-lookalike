@@ -81,6 +81,16 @@ export class AuthService implements OnDestroy {
         }));
     }
 
+    get token() {
+        return this._user.asObservable().pipe(map(user => {
+            if (user) {
+                return user.token;
+            } else {
+                return null;
+            }
+        }));
+    }
+
     signUp(email: string, password: string) {
         return this.http.post<AuthResponseData>(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${environment.firebaseApiKey}`,
             {
