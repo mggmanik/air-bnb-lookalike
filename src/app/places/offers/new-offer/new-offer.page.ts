@@ -98,7 +98,6 @@ export class NewOfferPage implements OnInit {
                 // imageFile = base64toBlob(imageData.replace('data:image/jpeg;base64,', ''), 'image/jpeg');
                 imageFile = dataURItoBlob(imageData);
             } catch (e) {
-                console.log(e);
                 return;
             }
         } else {
