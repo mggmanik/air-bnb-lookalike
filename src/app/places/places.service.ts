@@ -220,4 +220,22 @@ export class PlacesService {
                 })
             );
     }
+
+    deleteOffer(offerId: string) {
+        return this.authService.token
+            .pipe(
+                take(1),
+                switchMap(token => {
+                    return this.http.delete
+                    (`https://ionic-angular-course-18a8b.firebaseio.com/offered-places/${offerId}.json?auth=${token}`)
+                }),
+                switchMap(() => {
+                    return this.places;
+                }),
+                take(1),
+                tap(offers => {
+                    this._places.next(offers.filter(offer => offer.id !== offerId))
+                })
+            );
+    }
 }

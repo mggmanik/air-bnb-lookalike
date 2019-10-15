@@ -25,9 +25,12 @@
                 <ion-list>
                     <ion-item-sliding *ngFor="let offer of offers" #itemSliding>
                         <app-offer-item [offer]="offer"></app-offer-item>
-                        <ion-item-options side="end">
+                        <ion-item-options side="end" *ngIf="offer.userId === userId">
                             <ion-item-option color="secondary" (click)="onEditOffer(offer.id, itemSliding)">
                                 <ion-icon slot="icon-only" name="create"></ion-icon>
+                            </ion-item-option>
+                            <ion-item-option color="danger" (click)="onDeleteOffer(offer.id, itemSliding)">
+                                <ion-icon slot="icon-only" name="trash"></ion-icon>
                             </ion-item-option>
                         </ion-item-options>
                     </ion-item-sliding>

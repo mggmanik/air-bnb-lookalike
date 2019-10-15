@@ -3,6 +3,7 @@ import {PlacesService} from "../places.service";
 import {Place} from "../place.model";
 import {IonItemSliding, LoadingController} from "@ionic/angular";
 import {Router} from "@angular/router";
+import {AuthService} from "../../auth/auth.service";
 
 @Component({
     selector: 'app-offers',
@@ -12,8 +13,10 @@ import {Router} from "@angular/router";
 export class OffersPage implements OnInit {
 
     offers: Place[];
+    userId: string;
 
     constructor(private placesService: PlacesService,
+                private authService: AuthService,
                 private router: Router,
                 private loadingCtrl: LoadingController) {
     }
@@ -21,6 +24,9 @@ export class OffersPage implements OnInit {
     ngOnInit() {
         this.placesService.places.subscribe(offers => {
             this.offers = offers;
+            this.authService.userId.subscribe(userId => {
+                this.userId = userId;
+            });
         });
     }
 
@@ -38,4 +44,17 @@ export class OffersPage implements OnInit {
         itemSliding.close();
         this.router.navigate(['/', 'places', 'tabs', 'offers', 'edit', offerId]);
     }
+
+    onDeleteOffer(offerId: string, itemSliding: IonItemSliding) {
+        this.loadingCtrl.create({
+            message: 'Deleting...'
+        }).then(loadingEl => {
+            loadingEl.present();
+            this.placesService.deleteOffer(offerId).subscribe(() => {
+                itemSliding.close();
+                loadingEl.dismiss();
+            });
+        });
+    }
+
 }
